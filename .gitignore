@@ -1,0 +1,8 @@
+# Ignore CSV files in the data directory
+data/*.csv
+
+# Ignore ZIP files in the data directory
+data/*.zip
+
+# Ignore Parquet files in the data directory
+data/*.parquet
