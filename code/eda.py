@@ -1,12 +1,28 @@
 import pandas as pd
 import numpy as np
+import requests
+from io import BytesIO, StringIO
 
-# Load the datasets
-books_data_path = 'data/books_data.csv'  # Update the path accordingly
-books_ratings_path = 'data/Books_rating.csv'  # Update the path accordingly
+# Function to download data from a URL
+def download_data(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.content
+    else:
+        print("Failed to download data")
+        return None
 
-books_data = pd.read_csv(books_data_path)
-books_ratings = pd.read_csv(books_ratings_path)
+# Load the datasets from URL
+books_data_url = 'https://raw.githubusercontent.com/cp-bailey/NLP_Project_Team1/main/data/books_data.csv'
+books_ratings_url = 'https://raw.githubusercontent.com/cp-bailey/NLP_Project_Team1/main/data/Books_rating.csv'
+
+books_data_content = download_data(books_data_url)
+books_ratings_content = download_data(books_ratings_url)
+
+if books_data_content and books_ratings_content:
+    # Convert bytes to pandas DataFrame
+    books_data = pd.read_csv(BytesIO(books_data_content))
+    books_ratings = pd.read_csv(BytesIO(books_ratings_content))
 
 # Basic information
 print("Books Data Info:")
@@ -62,10 +78,10 @@ if 'categories' in books_data.columns:
 # clustering books based on their descriptions or categories to identify similar books, etc.
 
 
-#books_merged = pd.merge(books_data, books_ratings, on='Title')
+books_merged = pd.merge(books_data, books_ratings, on='Title')
 
 # Optionally, save the merged dataset to a new CSV file
-#books_merged.to_csv('data/books_merged.csv', index=False)
+books_merged.to_csv('data/books_merged.csv', index=False)
 
 # Read the CSV file into a DataFrame
 books_merged = pd.read_csv('data/books_merged.csv')
