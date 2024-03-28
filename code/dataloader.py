@@ -70,3 +70,10 @@ print("\nBooks Data EDA")
 basic_eda(books_data)
 print("\nBooks Ratings EDA")
 basic_eda(books_ratings)
+
+print("\nBooks Ratings EDA")
+basic_eda(books_merged)
+
+
+
+
