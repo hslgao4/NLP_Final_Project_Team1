@@ -104,7 +104,7 @@ def get_svd_recommendations(text_input):
     # Sort recommendations by rating (review/score)
     recommendations = recommendations.sort_values(by='review/score', ascending=False)
     # Return top non-duplicate recommendations
-    return recommendations[['Title', 'categories', 'review/summary']].head(10)
+    return recommendations[['Title', 'categories', 'review/summary', 'review/text', 'previewLink']].head(10)
 
 #%%
 # Main function to run the Streamlit app
