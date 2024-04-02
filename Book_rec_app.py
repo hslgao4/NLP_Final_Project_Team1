@@ -4,6 +4,9 @@ import streamlit as st
 import pickle
 import pandas as pd
 import nltk
+nltk.download("punkt")  # Download NLTK's tokenizers
+nltk.download("wordnet")  # Download NLTK's WordNet lexical database
+nltk.download("stopwords")  # Download NLTK's stopwords
 import re
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
