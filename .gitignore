@@ -6,3 +6,5 @@ data/*.zip
 
 # Ignore Parquet files in the data directory
 data/*.parquet
+/data
+.idea/workspace.xml
