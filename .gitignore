@@ -7,6 +7,10 @@ data/*.zip
 # Ignore Parquet files in the data directory
 data/*.parquet
 *.parquet
+
+# Ignore Pickle files in the data directory
 *.pkl
+
+# Ignore Streamlit environment files in the data directory
 .streamlit/credentials.toml
 .streamlit/requirements.txt
