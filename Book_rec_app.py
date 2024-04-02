@@ -4,19 +4,21 @@ import streamlit as st
 import pickle
 import pandas as pd
 import nltk
-nltk.download("punkt")  # Download NLTK's tokenizers
-nltk.download("wordnet")  # Download NLTK's WordNet lexical database
-nltk.download("stopwords")  # Download NLTK's stopwords
 import re
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
+
+nltk.download("punkt")  # Download NLTK's tokenizers
+nltk.download("wordnet")  # Download NLTK's WordNet lexical database
+nltk.download("stopwords")  # Download NLTK's stopwords
 
 #%%
 st.set_page_config(
     page_title="AI Book Recommendation",
     page_icon=":books:",
 )
+
 #%%
 st.title('AI Book Recommendation App')
 with st.expander(":open_book: Welcome to AI Book Recommendation!", expanded=False):
