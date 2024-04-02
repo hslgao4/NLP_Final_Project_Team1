@@ -1,17 +1,17 @@
 # To Run: streamlit run Book_rec_app.py --server.port=8888
-import streamlit as st
 
+import nltk
+nltk.download("english")
+nltk.download("wordnet")
+nltk.download("stopwords")
+
+import streamlit as st
 import pickle
 import pandas as pd
-import nltk
 import re
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
-
-nltk.download("punkt")  # Download NLTK's tokenizers
-nltk.download("wordnet")  # Download NLTK's WordNet lexical database
-nltk.download("stopwords")  # Download NLTK's stopwords
 
 #%%
 st.set_page_config(
