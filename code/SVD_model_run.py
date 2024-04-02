@@ -18,7 +18,7 @@ with open('X_matrix.pkl', 'rb') as f:
 
 
 # Load the dataset
-data = pd.read_parquet('./books_merged_clean.parquet')
+data = pd.read_parquet('/home/ubuntu/caitlin/1_DATS6312_NLP/Project/data/books_merged_clean.parquet')
 
 
 # Function to preprocess the text
@@ -82,3 +82,6 @@ def main():
     recommendations = get_recommendations(input_text, data, lsa_model, X)
     # Print recommendations
     print(recommendations[['Title', 'categories', 'review/summary']])
+
+if __name__ == "__main__":
+    main()
