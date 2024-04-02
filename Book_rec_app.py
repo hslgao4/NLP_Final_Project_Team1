@@ -3,7 +3,6 @@
 import nltk
 nltk.download("english")
 nltk.download("wordnet")
-nltk.download("stopwords")
 
 import streamlit as st
 import pickle
