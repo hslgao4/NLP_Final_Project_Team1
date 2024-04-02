@@ -1,9 +1,6 @@
 # To Run: streamlit run Book_rec_app.py --server.port=8888
 
 import nltk
-nltk.download("english")
-nltk.download("wordnet")
-
 import streamlit as st
 import pickle
 import pandas as pd
@@ -46,16 +43,16 @@ with st.expander(":open_book: How to Use", expanded=False):
 #%%#
 # SVD Model code
 
-# Load the pickled model
-with open('./data/SVD_recommendations.pkl', 'rb') as f:
-    lsa_model = pickle.load(f)
+@st.cache_resource()
+# Lazy load the model and data
+def lazy_load_model_and_data():
+    with open('/home/ubuntu/caitlin/NLP_Project_Team1/data/SVD_recommendations2.pkl', 'rb') as f:
+        lsa_model = pickle.load(f)
+    with open('/home/ubuntu/caitlin/NLP_Project_Team1/data/X_matrix2.pkl', 'rb') as f:
+        X = pickle.load(f)
+    data = pd.read_parquet('/home/ubuntu/caitlin/NLP_Project_Team1/data/books_merged_clean.parquet')
+    return lsa_model, X, data
 
-# Load the pickled X (data)
-with open('./data/X_matrix.pkl', 'rb') as f:
-    X = pickle.load(f)
-
-# Load the dataset
-data = pd.read_parquet('./data/books_merged_clean.parquet')
 
 # Function to preprocess the text
 def preprocess_text(text):
@@ -86,7 +83,9 @@ def clean_title(title):
     return title
 
 # Function to generate recommendations
-def get_recommendations(text_input, data, lsa_model, X):
+def get_svd_recommendations(text_input):
+    # Lazy load model and data
+    lsa_model, X, data = lazy_load_model_and_data()
     # Preprocess the text
     processed_text = preprocess_text(text_input)
     # Transform the preprocessed text input
@@ -94,7 +93,7 @@ def get_recommendations(text_input, data, lsa_model, X):
     # Compute cosine similarity between input vector and all book vectors
     similarities = cosine_similarity(input_vector, X)
     # Get indices of top recommendations
-    top_indices = similarities.argsort()[0][::-1][:40]  # Get top 30 recommendations
+    top_indices = similarities.argsort()[0][::-1][:35]  # Get top 35 recommendations
     # Retrieve recommended books
     recommendations = data.iloc[top_indices]
     # Apply clean_title function to the 'Title' column
@@ -105,16 +104,7 @@ def get_recommendations(text_input, data, lsa_model, X):
     # Sort recommendations by rating (review/score)
     recommendations = recommendations.sort_values(by='review/score', ascending=False)
     # Return top non-duplicate recommendations
-    return recommendations.head(10)
-
-# SVD main function
-def svd_main():
-    # Take user input via terminal
-    input_text = input("For Future Reads recommendations, type your recent five-star book review here:")
-    # Make recommendations based on the input text
-    recommendations = get_recommendations(input_text, data, lsa_model, X)
-    # Print recommendations
-    print(recommendations[['Title', 'categories', 'review/summary']])
+    return recommendations[['Title', 'categories', 'review/summary']].head(10)
 
 #%%
 # Main function to run the Streamlit app
@@ -129,10 +119,10 @@ def main():
 
     if st.button("Get Recommendations"):
         if model_type == "SVD":
-            recommendations = svd_main(input_text)
+            recommendations = get_svd_recommendations(input_text)
             # st.write("SVD recommendations coming soon!")
             st.write("**Recommendations:**")
-            st.table(recommendations)
+            st.dataframe(recommendations, hide_index=True)
         elif model_type == "Transformers4Rec":
             # recommendations = get_transformer4rec_recommendations(input_text, data)
             st.write("Transformers4Rec recommendations coming soon!")
