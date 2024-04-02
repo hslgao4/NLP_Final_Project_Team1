@@ -8,3 +8,5 @@ data/*.zip
 data/*.parquet
 *.parquet
 *.pkl
+.streamlit/credentials.toml
+.streamlit/requirements.txt
