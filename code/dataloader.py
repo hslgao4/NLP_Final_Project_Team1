@@ -69,7 +69,6 @@ def basic_eda(df):
 print("\nBooks Data EDA")
 basic_eda(books_data)
 print("\nBooks Ratings EDA")
-<<<<<<< HEAD
 basic_eda(books_ratings)
 
 print("\nBooks Ratings EDA")
@@ -78,6 +77,3 @@ basic_eda(books_merged)
 
 
 
-=======
-basic_eda(books_ratings)
->>>>>>> b05b3222f96ff5431fc692bbd02b61a94303842e
