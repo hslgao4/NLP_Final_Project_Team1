@@ -53,7 +53,7 @@ print(books_merged.info())
 print(books_merged.isnull().sum())
 
 # Save the cleaned dataset as a Parquet file
-books_merged.to_parquet('data/books_merged_clean.parquet')
+#books_merged.to_parquet('data/books_merged_clean.parquet')
 
 
 
