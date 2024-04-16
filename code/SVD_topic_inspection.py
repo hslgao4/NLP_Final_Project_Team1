@@ -66,9 +66,6 @@ print(type(X))
 # Access the TruncatedSVD model from the Pipeline
 svd_model = svd_model.named_steps['truncatedsvd']
 
-# Get the topic-word matrix
-topic_word_matrix = svd_model.components_
-
 # Get the most important words for each topic
 topic_terms = []
 for i, component in enumerate(svd_model.components_):
@@ -78,6 +75,6 @@ for i, component in enumerate(svd_model.components_):
 
 # Compute coherence score
 coherence_model = CoherenceModel(topics=topic_terms, texts=tokenized_documents, dictionary=dictionary, coherence='c_v',
-                                 coherence_params={'topic_word_matrix': topic_word_matrix})
+                                 model=svd_model, corpus=X)
 coherence_score = coherence_model.get_coherence()
 print("Coherence Score:", coherence_score)

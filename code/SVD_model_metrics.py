@@ -17,6 +17,9 @@ from gensim import models
 from gensim import corpora
 from gensim.models.coherencemodel import CoherenceModel
 
+# Amazon Books Reviews data from:
+# https://www.kaggle.com/datasets/mohamedbakhet/amazon-books-reviews?select=books_data.csv
+
 
 # Function to load and clean the data
 def load_and_clean_dataset(file_path, summary_column='review/summary', text_column='review/text'):

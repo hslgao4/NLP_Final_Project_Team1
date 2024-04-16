@@ -7,6 +7,10 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+# Amazon Books Reviews data from:
+# https://www.kaggle.com/datasets/mohamedbakhet/amazon-books-reviews?select=books_data.csv
+
+
 # Load the pickled model
 with open('SVD_recommendations.pkl', 'rb') as f:
     lsa_model = pickle.load(f)
