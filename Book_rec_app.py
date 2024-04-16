@@ -46,9 +46,9 @@ with st.expander(":open_book: How to Use", expanded=False):
 @st.cache_resource()
 # Lazy load the model and data
 def lazy_load_model_and_data():
-    with open('/home/ubuntu/caitlin/NLP_Project_Team1/data/SVD_recommendations2.pkl', 'rb') as f:
+    with open('/home/ubuntu/caitlin/NLP_Project_Team1/data/SVD_recommendations_17.pkl', 'rb') as f:
         lsa_model = pickle.load(f)
-    with open('/home/ubuntu/caitlin/NLP_Project_Team1/data/X_matrix2.pkl', 'rb') as f:
+    with open('/home/ubuntu/caitlin/NLP_Project_Team1/data/X_matrix_17.pkl', 'rb') as f:
         X = pickle.load(f)
     data = pd.read_parquet('/home/ubuntu/caitlin/NLP_Project_Team1/data/books_merged_clean.parquet')
     return lsa_model, X, data
