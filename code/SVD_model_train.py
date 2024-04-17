@@ -46,7 +46,7 @@ def preprocess_text(text):
 
 
 # Function to create a pipeline combining TF-IDF vectorization and SVD
-def train_lsa_model(data, combined_column='review_combined', max_df=0.5, min_df=2, n_components=100, random_state=42):
+def train_lsa_model(data, combined_column='review_combined', max_df=0.5, min_df=2, n_components=17, random_state=42):
     # Create TF-IDF vectorizer
     vectorizer = TfidfVectorizer(max_df=max_df, min_df=min_df, stop_words='english', use_idf=True)
     # Create TruncatedSVD model
@@ -56,7 +56,7 @@ def train_lsa_model(data, combined_column='review_combined', max_df=0.5, min_df=
     # Fit and transform the data
     X = lsa_model.fit_transform(data[combined_column])
     # Save the X matrix
-    with open('X_matrix2.pkl', 'wb') as f:
+    with open('X_matrix_17.pkl', 'wb') as f:
         pickle.dump(X, f)
     return X, lsa_model
 
@@ -74,7 +74,7 @@ def main():
     # call model
     X, lsa_model = train_lsa_model(data, combined_column='review_combined')
     # save the model
-    save_model(lsa_model, "SVD_recommendations2.pkl")
+    save_model(lsa_model, "SVD_recommendations_17.pkl")
 
 if __name__ == "__main__":
     main()
