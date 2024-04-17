@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-# # Load the datasets
+# Load the datasets
 # books_data_path = 'data/books_data.csv'  # Update the path accordingly
 # books_ratings_path = 'data/Books_rating.csv'  # Update the path accordingly
 
@@ -93,3 +93,12 @@ import pandas as pd
 
 data = pd.read_parquet('/home/ubuntu/NLP_Project_Team1/data/books_merged_clean.parquet')
 print(data.columns)
+
+# Set display options
+pd.set_option('display.max_columns', None)  # Ensures all columns are shown
+pd.set_option('display.max_colwidth', None)  # Removes truncation of column content
+pd.set_option('display.width', None)  # Uses maximum width to display each row
+
+
+# Print the last five rows of the DataFrame
+print(data.tail(5))
