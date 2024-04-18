@@ -28,13 +28,16 @@ books_merged['ratingsCount'].fillna(books_merged['ratingsCount'].median(), inpla
 books_merged['publishedDate'] = pd.to_datetime(books_merged['publishedDate'], errors='coerce')
 
 
+# clean all text
 def clean_text(text):
     # Lowercase text
     text = text.lower()
     # Remove punctuation
-    text = re.sub(r'[^a-zA-Z0-9]', ' ', text)
+    text = re.sub(r'[^a-zA-Z0-9\']', ' ', text)
     # Remove extra spaces
     text = re.sub(r'\s+', ' ', text).strip()
+    # Replace "nan" with "N/A"
+    text = text.replace("nan", "N/A")
     
     return text
 
@@ -43,6 +46,7 @@ def clean_text(text):
 text_columns = ['Title', 'description', 'authors', 'publisher', 'categories', 'review/text', 'review/summary']
 for col in text_columns:
     books_merged[col] = books_merged[col].apply(lambda x: clean_text(str(x)))
+
 
 # Continue with the normalization and saving steps
 scaler = MinMaxScaler()
