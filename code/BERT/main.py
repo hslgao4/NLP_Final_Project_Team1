@@ -45,42 +45,27 @@ class Config:
 # Instantiate the configuration
 args = Config()
 
+
 def main():
-    # Initialize dataset and dataloaders
+    torch.autograd.set_detect_anomaly(True)
+    args = Config()
+
     dataset = UserInteractionDataset(
         args.dataset_path,
         args.bert_max_len,
         args.mask_prob,
         args.mask_token
     )
-    
-    # Ideally, you should have separate datasets for train, validation, and test
-    train_loader = DataLoader(
-        dataset,
-        batch_size=args.train_batch_size,
-        shuffle=True,
-        num_workers=args.num_workers
-    )
-    val_loader = DataLoader(
-        dataset,
-        batch_size=args.train_batch_size,
-        num_workers=args.num_workers
-    )
-    test_loader = DataLoader(
-        dataset,
-        batch_size=args.train_batch_size,
-        num_workers=args.num_workers
-    )
 
-    # Ensure the export root exists
+    train_loader = DataLoader(dataset, batch_size=args.train_batch_size, shuffle=True, num_workers=args.num_workers)
+    val_loader = DataLoader(dataset, batch_size=args.train_batch_size, num_workers=args.num_workers)
+    test_loader = DataLoader(dataset, batch_size=args.train_batch_size, num_workers=args.num_workers)
+
     if not os.path.exists(args.export_root):
         os.makedirs(args.export_root)
-    
-    # Initialize the BERT model
-    bert_model = BERTModel(args)
-    bert_model.to('cuda' if torch.cuda.is_available() else 'cpu')
 
-    # Initialize the trainer with additional loaders and export root
+    bert_model = BERTModel(args).to(args.device)
+
     trainer = BERTTrainer(
         args=args,
         model=bert_model,
@@ -90,11 +75,9 @@ def main():
         export_root=args.export_root
     )
 
-    # Training loop
     for epoch in range(args.num_epochs):
-        trainer.train(epoch)
+        trainer.train(epoch)  # Now just passing the epoch number
 
-    # Optionally, start the evaluation on test data
     trainer.test()
 
 if __name__ == "__main__":

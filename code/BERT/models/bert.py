@@ -246,6 +246,7 @@ class BERT(nn.Module):
 
         # embedding the indexed sequence to sequence of vectors
         x = self.embedding(x)
+        #x = torch.clamp(x, 0, self.args.num_items - 1)
 
         # running over multiple transformer blocks
         for transformer in self.transformer_blocks:
