@@ -6,6 +6,7 @@ from sklearn.preprocessing import MinMaxScaler
 # Load the dataset
 books_merged = pd.read_csv('data/books_merged.csv')
 
+
 # Quick look at the data
 print(books_merged.head())
 print(books_merged.info())
@@ -31,9 +32,11 @@ books_merged['publishedDate'] = pd.to_datetime(books_merged['publishedDate'], er
 # clean all text
 def clean_text(text):
     # Lowercase text
-    text = text.lower()
-    # Remove punctuation
-    text = re.sub(r'[^a-zA-Z0-9\']', ' ', text)
+    # text = text.lower()
+    # Remove parentheses and words within them
+    text = re.sub(r'\([^)]*\)', '', text)
+    # Remove punctuation (except apostrophes)
+    text = re.sub(r'[^a-zA-Z0-9\'.]', ' ', text)
     # Remove extra spaces
     text = re.sub(r'\s+', ' ', text).strip()
     # Replace "nan" with "N/A"
@@ -59,5 +62,6 @@ print(books_merged.isnull().sum())
 
 # Save the cleaned dataset as a Parquet file
 books_merged.to_parquet('data/books_merged_clean.parquet')
+
 
 
