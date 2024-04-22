@@ -35,7 +35,7 @@ def clean_text(text):
     # text = text.lower()
     # Remove parentheses and words within them
     text = re.sub(r'\([^)]*\)', '', text)
-    # Remove punctuation (except apostrophes)
+    # Remove punctuation (except apostrophes and periods)
     text = re.sub(r'[^a-zA-Z0-9\'.]', ' ', text)
     # Remove extra spaces
     text = re.sub(r'\s+', ' ', text).strip()
