@@ -4,8 +4,8 @@ import re
 from sklearn.preprocessing import MinMaxScaler
 
 # Load the dataset
-books_merged = pd.read_csv('data/books_merged.csv')
-
+#books_merged = pd.read_csv('data/books_merged.csv')
+books_merged = pd.read_csv("/home/ubuntu/caitlin/1_DATS6312_NLP/Project/data/books_merged.csv")
 
 # Quick look at the data
 print(books_merged.head())
@@ -30,13 +30,18 @@ books_merged['publishedDate'] = pd.to_datetime(books_merged['publishedDate'], er
 
 
 # clean all text
-def clean_text(text):
+def clean_text(text, column_name):
     # Lowercase text
     # text = text.lower()
     # Remove parentheses and words within them
     text = re.sub(r'\([^)]*\)', '', text)
-    # Remove punctuation (except apostrophes and periods)
-    text = re.sub(r'[^a-zA-Z0-9\'.]', ' ', text)
+    # Punctuation removal rules
+    if column_name in ['authors', 'categories']:
+        text = re.sub(r'[^a-zA-Z]', ' ', text)
+    elif column_name == 'review/text':
+        text = re.sub(r'[^a-zA-Z0-9!?.,\']', ' ', text)
+    else:
+        text = re.sub(r'[^a-zA-Z0-9.\']', ' ', text)
     # Remove extra spaces
     text = re.sub(r'\s+', ' ', text).strip()
     # Replace "nan" with "N/A"
@@ -44,11 +49,10 @@ def clean_text(text):
     
     return text
 
-
 # Correctly applying text cleaning outside the function definition
 text_columns = ['Title', 'description', 'authors', 'publisher', 'categories', 'review/text', 'review/summary']
 for col in text_columns:
-    books_merged[col] = books_merged[col].apply(lambda x: clean_text(str(x)))
+    books_merged[col] = books_merged[col].apply(lambda x: clean_text(str(x), col))
 
 
 # Continue with the normalization and saving steps
@@ -61,7 +65,7 @@ print(books_merged.info())
 print(books_merged.isnull().sum())
 
 # Save the cleaned dataset as a Parquet file
-books_merged.to_parquet('data/books_merged_clean.parquet')
-
+#books_merged.to_parquet('data/books_merged_clean.parquet')
+books_merged.to_parquet("/home/ubuntu/caitlin/NLP_Project_Team1/data/books_merged_clean.parquet")
 
 
