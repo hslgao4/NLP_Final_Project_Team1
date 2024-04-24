@@ -4,8 +4,7 @@ import re
 from sklearn.preprocessing import MinMaxScaler
 
 # Load the dataset
-#books_merged = pd.read_csv('data/books_merged.csv')
-books_merged = pd.read_csv("/home/ubuntu/caitlin/1_DATS6312_NLP/Project/data/books_merged.csv")
+books_merged = pd.read_csv('data/books_merged.csv')
 
 # Quick look at the data
 print(books_merged.head())
@@ -41,7 +40,7 @@ def clean_text(text, column_name):
     elif column_name == 'review/text':
         text = re.sub(r'[^a-zA-Z0-9!?.,\']', ' ', text)
     else:
-        text = re.sub(r'[^a-zA-Z0-9.\']', ' ', text)
+        text = re.sub(r'[^a-zA-Z0-9\']', ' ', text)
     # Remove extra spaces
     text = re.sub(r'\s+', ' ', text).strip()
     # Replace "nan" with "N/A"
@@ -65,7 +64,6 @@ print(books_merged.info())
 print(books_merged.isnull().sum())
 
 # Save the cleaned dataset as a Parquet file
-#books_merged.to_parquet('data/books_merged_clean.parquet')
-books_merged.to_parquet("/home/ubuntu/caitlin/NLP_Project_Team1/data/books_merged_clean.parquet")
+books_merged.to_parquet('data/books_merged_clean.parquet')
 
 
