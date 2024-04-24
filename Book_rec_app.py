@@ -123,7 +123,7 @@ def main():
     input_text = st.text_area("Enter your book review (3-5 sentences):")
 
     if st.button("Get Recommendations"):
-        if model_type == "Bert4Rec":
+        if model_type == "Bert4rec":
             # recommendations = get_bert4rec_recommendations(input_text, data)
             st.write("Bert4Rec recommendations coming soon!")
         elif model_type == "Classification4rec":
@@ -134,10 +134,6 @@ def main():
             st.write("**Recommendations:**")
             st.dataframe(recommendations, hide_index=True)
 
-
-        # Output recommendations
-        # st.write("**Recommendations:**")
-        # st.table(recommendations)
 
 
 if __name__ == "__main__":
