@@ -125,10 +125,10 @@ def main():
     if st.button("Get Recommendations"):
         if model_type == "Bert4rec":
             # recommendations = get_bert4rec_recommendations(input_text, data)
-            st.write("Bert4Rec recommendations coming soon!")
+            st.write("Bert4rec recommendations coming soon!")
         elif model_type == "Classification4rec":
             # recommendations = get_class4rec_recommendations(input_text, data)
-            st.write("Classification4Rec recommendations coming soon!")
+            st.write("Classification4rec recommendations coming soon!")
         elif model_type == "SVD":
             recommendations = get_svd_recommendations(input_text)
             st.write("**Recommendations:**")
