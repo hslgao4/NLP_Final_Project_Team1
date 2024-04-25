@@ -70,8 +70,13 @@ def get_recommendations(text_input, data, lsa_model, X):
     # Apply clean_title function to the 'Title' column
     recommendations = recommendations.copy() # ensure that any modifications are made to a separate copy
     recommendations.loc[:, 'Title'] = recommendations['Title'].apply(clean_title)
+    # Convert 'review/summary' and 'Title' columns to lowercase for duplicate removal
+    recommendations['review/summary_lower'] = recommendations['review/summary'].str.lower()
+    recommendations['Title_lower'] = recommendations['Title'].str.lower()
     # Remove duplicates based on review summary
-    recommendations = recommendations.drop_duplicates(subset=['review/summary'], keep='first')
+    recommendations = recommendations.drop_duplicates(subset=['review/summary_lower'], keep='first')
+    # Remove duplicates based on Title
+    recommendations = recommendations.drop_duplicates(subset=['Title_lower'], keep='first')
     # Sort recommendations by rating (review/score)
     recommendations = recommendations.sort_values(by='review/score', ascending=False)
     # Return top non-duplicate recommendations
