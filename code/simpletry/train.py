@@ -60,17 +60,19 @@ def main():
     data = load_and_clean_dataset("data/final_df.parquet")
     model = SentenceTransformer('all-mpnet-base-v2')
     vector_store_path = "./my_vector_store"
+
+    # Check if the VectorStore directory exists
     if os.path.exists(vector_store_path) and os.listdir(vector_store_path):
-        print("Loading existing VectorStore...")
-        vector_store = VectorStore(path=vector_store_path)
-        vector_store = create_vector_store(data, model, vector_store_path)
+        print("VectorStore directory detected. Assuming it contains the necessary data and skipping recreation.")
+        vector_store = VectorStore(path=vector_store_path)  # Load the existing VectorStore
     else:
-        print("VectorStore not found or empty, creating new...")
+        print("VectorStore directory not found or empty, creating new VectorStore...")
         vector_store = create_vector_store(data, model, vector_store_path)
-    input_text = "Looking for a book about Artificial Intelligence and technology."
+
+    input_text = "Looking for a book about fantasy and romance"
     recommended_books_df = find_similar_books(input_text, vector_store, model)
     print("Recommended books:")
-    print(recommended_books_df)
+    
 
 if __name__ == "__main__":
     main()
