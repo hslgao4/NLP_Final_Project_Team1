@@ -9,6 +9,13 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+import os
+import numpy as np
+from deeplake import VectorStore
+from sentence_transformers import SentenceTransformer
+
+import pandas as pd
+
 #%%
 st.set_page_config(
     page_title="AI Book Recommendation",
@@ -41,8 +48,61 @@ with st.expander(":open_book: How to Use", expanded=False):
     )
 
 #%%#
-# SVD Model code
 
+# DeepLake
+def load_and_clean_dataset(file_path):
+    data = pd.read_parquet(file_path)
+
+    # Standardize titles and authors
+    data['Title'] = data['Title'].str.lower().str.strip()
+    data['authors'] = data['authors'].str.lower().str.strip()
+
+    # Group by book identifiers (excluding 'Id') and select the entry with the highest review score
+    data = data.groupby(['Title', 'authors']).agg({
+        'review/score': 'max',  # Gets the maximum review score for each group
+        'description': 'first'  # Keeps the first description found for each group
+    }).reset_index()
+
+    print("Data cleaned and filtered to include only the highest reviewed entries.")
+    return data
+
+def create_vector_store(data, model, vector_store_path="my_vector_store", batch_size=500):
+    print("Creating VectorStore...")
+    vector_store = VectorStore(path=vector_store_path, overwrite=True)
+    total_batches = len(data) // batch_size + (len(data) % batch_size != 0)
+
+    seen_titles = set()
+    for i in range(0, len(data), batch_size):
+        batch = data.iloc[i:i+batch_size]
+        batch = batch[~batch['Title'].isin(seen_titles)]
+        seen_titles.update(batch['Title'].tolist())
+
+        texts = batch['description'].tolist()  # Using book descriptions for embedding
+        embeddings = model.encode(texts, show_progress_bar=False)
+        metadata = batch[['Title', 'authors', 'review/score']].to_dict(orient='records')
+        vector_store.add(embedding=embeddings, metadata=metadata, text=texts)
+        print(f"Processed batch {i // batch_size + 1}/{total_batches}")
+    vector_store.commit()
+    print("VectorStore created and data added.")
+    return vector_store
+
+def get_deeplake_recs(input_text, vector_store, model, top_n=10):
+    print("Finding similar books...")
+    input_embedding = model.encode([input_text])[0]
+    search_results = vector_store.search(embedding=input_embedding, k=top_n, distance_metric='COS')
+    if search_results:
+        similar_books = pd.DataFrame(search_results['metadata'])
+        print("Most similar books found:")
+        print(similar_books[['Title', 'authors', 'review/score']].head(6))
+    else:
+        print("No similar books found.")
+        similar_books = pd.DataFrame()
+    return similar_books
+
+# KNN
+
+
+# SVD Model code
 @st.cache_resource()
 # Lazy load the model and data
 def lazy_load_model_and_data():
@@ -109,7 +169,7 @@ def get_svd_recommendations(text_input):
     # Sort recommendations by rating (review/score)
     recommendations = recommendations.sort_values(by='review/score', ascending=False)
     # Return top non-duplicate recommendations
-    return recommendations[['Title', 'authors', 'categories', 'review/summary', 'review/text', 'previewLink']].head(10)
+    return recommendations[['Title', 'authors', 'review/score']].head(6)
 
 #%%
 # Main function to run the Streamlit app
@@ -117,18 +177,23 @@ def main():
     st.title('Your next story starts here...')
 
     # Sidebar to select model type
-    model_type = st.sidebar.radio("Select Model Type", ("Bert4rec", "Classification4rec", "SVD"))
+    model_type = st.sidebar.radio("Select Model Type", ("DeepLake", "KNN", "SVD"))
 
     # Text input area for book review
     input_text = st.text_area("Enter your book review (3-5 sentences):")
 
     if st.button("Get Recommendations"):
-        if model_type == "Bert4rec":
-            # recommendations = get_bert4rec_recommendations(input_text, data)
-            st.write("Bert4rec recommendations coming soon!")
-        elif model_type == "Classification4rec":
+        if model_type == "DeepLake":
+            data = load_and_clean_dataset("/home/ubuntu/caitlin/NLP_Project_Team1/data/final_df.parquet")
+            model = SentenceTransformer('all-mpnet-base-v2')
+            vector_store_path = "/home/ubuntu/caitlin/NLP_Project_Team1/my_vector_store/"
+            vector_store = VectorStore(path=vector_store_path)  # Load the existing VectorStore
+            recommendations = get_deeplake_recs(input_text, vector_store, model, top_n=6)
+            st.write("**Recommendations:**")
+            st.dataframe(recommendations, hide_index=True)
+        elif model_type == "KNN":
             # recommendations = get_class4rec_recommendations(input_text, data)
-            st.write("Classification4rec recommendations coming soon!")
+            st.write("KNN recommendations coming soon!")
         elif model_type == "SVD":
             recommendations = get_svd_recommendations(input_text)
             st.write("**Recommendations:**")
