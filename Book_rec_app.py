@@ -184,7 +184,6 @@ def main():
 
     if st.button("Get Recommendations"):
         if model_type == "DeepLake":
-            data = load_and_clean_dataset("/home/ubuntu/caitlin/NLP_Project_Team1/data/final_df.parquet")
             model = SentenceTransformer('all-mpnet-base-v2')
             vector_store_path = "/home/ubuntu/caitlin/NLP_Project_Team1/my_vector_store/"
             vector_store = VectorStore(path=vector_store_path)  # Load the existing VectorStore
