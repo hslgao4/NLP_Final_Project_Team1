@@ -14,7 +14,8 @@ Here is a brief description of each model:
   - ADD INFO HERE
 
 - **SVD**: 
-  - Input a 3-5 sentence book review, receive most similar book reviews from Amazon Books Reviews dataset 
+  - Input a 3-5 sentence book review
+  - Model uses dimensionality reduction and cosine similary to identify similar book reviews
   - Architecture uses NLTK preprocessing, TF-IDF vectorization, SVD, LSA, and cosine similarity
 
 ## Getting Started
