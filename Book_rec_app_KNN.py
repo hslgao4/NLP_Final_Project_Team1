@@ -1,4 +1,4 @@
-# To Run: streamlit run Book_rec_app.py --server.port=8888
+# To Run: streamlit run Book_rec_app_KNN.py --server.port=8888
 import torch
 from transformers import BertTokenizer, BertForSequenceClassification, BertModel
 import joblib
