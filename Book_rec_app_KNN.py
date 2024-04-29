@@ -34,7 +34,8 @@ st.title('AI Book Recommendation App')
 with st.expander(":open_book: Welcome to AI Book Recommendation!", expanded=False):
     st.write(
         """     
-    - Provide a short book review and receive tailored recommendations for your next read.
+    - Provide a short book review or tell us what type of story you want to read
+    - Receive tailored recommendations for your next read
     - Use the intuitive controls on the left to tailor your experience to your preferences.
         """
     )
@@ -43,13 +44,16 @@ with st.expander(":open_book: Welcome to AI Book Recommendation!", expanded=Fals
 with st.expander(":open_book: How to Use", expanded=False):
     st.write(
         """
-    1. **Enter Book Review:**
+    1. **Enter Book Summary (DeepLake model):**
+        - Type or paste a 1-2 sentence summary of the type of book you want to read.
+        - Be descriptive, get creative! :stuck_out_tongue_winking_eye:
+        
+    2. **Enter Book Review (KNN & SVD models):**
         - Type or paste a 3-5 sentence review of a book you enjoyed to find more like it.
         - Hint: Tell us what you liked most about a recent read.
-        - Be descriptive, get creative! :stuck_out_tongue_winking_eye:
 
-    2. **Choose Features:**
-        - Toggle the switch on the left sidebar to choose between SVD and Transformers4Rec models.
+    3. **Choose Features:**
+        - Toggle the switch on the left sidebar to choose between models.
         - Which model gives you better results?
         """
     )
