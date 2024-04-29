@@ -26,6 +26,7 @@ Here is a brief description of each model:
 ## Built With
 
 - [Streamlit](https://streamlit.io/) - For the web interface
+- [Amazon Books Reviews Data](https://www.kaggle.com/datasets/mohamedbakhet/amazon-books-reviews) - For training and fine-tuning models
 - [DeepLake](https://docs.activeloop.ai/?utm_source=github&utm_medium=github&utm_campaign=github_readme&utm_id=readme) - For DeepLake NLP model
 
 ## Contributors
