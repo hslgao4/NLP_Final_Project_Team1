@@ -45,7 +45,7 @@ with st.expander(":open_book: How to Use", expanded=False):
     st.write(
         """
     1. **Enter Book Summary (DeepLake model):**
-        - Type or paste a 1-2 sentence summary of the type of book you want to read.
+        - Type or paste a description or summary of the type of book you want to read.
         - Be descriptive, get creative! :stuck_out_tongue_winking_eye:
         
     2. **Enter Book Review (KNN & SVD models):**
@@ -250,7 +250,7 @@ def main():
     model_type = st.sidebar.radio("Select Model Type", ("DeepLake", "KNN", "SVD"))
 
     # Text input area for book review
-    input_text = st.text_area("Enter your book review (3-5 sentences):")
+    input_text = st.text_area("Enter your book description (DeepLake) or review (KNN, SVD):")
 
     if st.button("Get Recommendations"):
         if model_type == "DeepLake":
