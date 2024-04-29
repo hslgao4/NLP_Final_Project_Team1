@@ -1,16 +1,23 @@
 # To Run: streamlit run Book_rec_app.py --server.port=8888
-
+import torch
+from transformers import BertTokenizer, BertForSequenceClassification, BertModel
+import joblib
+import pandas as pd
+import re
+from sklearn.neighbors import NearestNeighbors
+import numpy as np
 import nltk
+nltk.download('punkt')
+nltk.download('wordnet')
 import streamlit as st
 import pickle
-import pandas as pd
+
 import re
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
-
 import os
-import numpy as np
+
 from deeplake import VectorStore
 from sentence_transformers import SentenceTransformer
 
@@ -100,17 +107,76 @@ def get_deeplake_recs(input_text, vector_store, model, top_n=10):
     return similar_books
 
 # KNN
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+bert_model = BertModel.from_pretrained('bert-base-uncased').to(device)
+
+def model_predict(text):
+    path1 = "/home/ubuntu/NLP_Project_Team1/Code/result/checkpoint-4656"
+    model = BertForSequenceClassification.from_pretrained(path1)
+    encoded_input = tokenizer(text, return_tensors='pt', padding=True, truncation=True, max_length=512)
+    model.eval()
+    model.to(device)
+    encoded_input = {k: v.to(device) for k, v in encoded_input.items()}
+    with torch.no_grad():
+        output = model(**encoded_input)
+
+    logits = output.logits
+    predicted_class_idx = torch.argmax(logits, dim=1).item()
+    label_encoder = joblib.load('/home/ubuntu/NLP_Project_Team1/label_encoder.joblib')
+    predicted_class = label_encoder.inverse_transform([predicted_class_idx])
+    category = predicted_class[0]
+    return category
+
+
+def generate_embedding(text):
+    tokens = tokenizer(text, return_tensors='pt', padding=True, truncation=True)
+    tokens = {key: val.to(device) for key, val in tokens.items()}
+    with torch.no_grad():
+        outputs = bert_model(**tokens)
+
+    return outputs.last_hidden_state.mean(dim=1).cpu().numpy().reshape(-1)
+
+def rem_deplicate(text):
+    clean_text = re.sub(r"\[.*?\]", "", text)
+    return re.sub(r"\(.*?\)", "", clean_text)
+
+def knn_model(text):
+    path2 = '/home/ubuntu/NLP_Project_Team1/Code/data/final_df.parquet'
+    dff = pd.read_parquet(path2)
+
+    category = model_predict(text)
+    df = dff.copy()
+    df = df[df['categories'] == category].reset_index(drop=True)
+
+    df['review_embed'] = df['review_text'].apply(generate_embedding)
+
+    knn_model = NearestNeighbors(n_neighbors=50)
+    knn_model.fit(np.stack(df['review_embed'].values))
+
+    new_embedding = generate_embedding(text)
+    distances, indices = knn_model.kneighbors([new_embedding])
+    recommended_books = df.iloc[indices[0]]
+    recommended_books = recommended_books.drop_duplicates(subset=['review_summary'], keep='first')
+    books = recommended_books[['Title', 'authors', 'review_summary', 'review_score']]
+    books = books.copy()
+    books.Title = books.Title.apply(rem_deplicate)
+    book_unique = books.drop_duplicates(subset=['Title']).copy()
+    book_unique = book_unique.sort_values(by='review_score', ascending=False)
+    temp = book_unique.copy()
+    top6_book = temp.head(6)
+    return top6_book
 
 
 # SVD Model code
 @st.cache_resource()
 # Lazy load the model and data
 def lazy_load_model_and_data():
-    with open('/home/ubuntu/caitlin/NLP_Project_Team1/data/SVD_recommendations_17.pkl', 'rb') as f:
+    with open('/home/ubuntu/NLP_Project_Team1/data/SVD_recommendations_17.pkl', 'rb') as f:
         lsa_model = pickle.load(f)
-    with open('/home/ubuntu/caitlin/NLP_Project_Team1/data/X_matrix_17.pkl', 'rb') as f:
+    with open('/home/ubuntu/NLP_Project_Team1/data/X_matrix_17.pkl', 'rb') as f:
         X = pickle.load(f)
-    data = pd.read_parquet('/home/ubuntu/caitlin/NLP_Project_Team1/data/books_merged_clean.parquet')
+    data = pd.read_parquet('/home/ubuntu/NLP_Project_Team1/data/books_merged_clean.parquet')
     return lsa_model, X, data
 
 
@@ -169,7 +235,7 @@ def get_svd_recommendations(text_input):
     # Sort recommendations by rating (review/score)
     recommendations = recommendations.sort_values(by='review/score', ascending=False)
     # Return top non-duplicate recommendations
-    return recommendations[['Title', 'review/summary', 'authors', 'review/score']].head(6)
+    return recommendations[['Title', 'authors','review/summary', 'review/score']].head(6)
 
 #%%
 # Main function to run the Streamlit app
@@ -184,15 +250,17 @@ def main():
 
     if st.button("Get Recommendations"):
         if model_type == "DeepLake":
+            data = load_and_clean_dataset("/home/ubuntu/NLP_Project_Team1/data/final_df.parquet")
             model = SentenceTransformer('all-mpnet-base-v2')
-            vector_store_path = "/home/ubuntu/caitlin/NLP_Project_Team1/my_vector_store/"
+            vector_store_path = "/home/ubuntu/NLP_Project_Team1/my_vector_store/"
             vector_store = VectorStore(path=vector_store_path)  # Load the existing VectorStore
             recommendations = get_deeplake_recs(input_text, vector_store, model, top_n=6)
             st.write("**Recommendations:**")
             st.dataframe(recommendations, hide_index=True)
         elif model_type == "KNN":
-            # recommendations = get_class4rec_recommendations(input_text, data)
-            st.write("KNN recommendations coming soon!")
+            st.write("**Recommendations:**")
+            recommendation = knn_model(input_text)
+            st.dataframe(recommendation, hide_index=True)
         elif model_type == "SVD":
             recommendations = get_svd_recommendations(input_text)
             st.write("**Recommendations:**")
