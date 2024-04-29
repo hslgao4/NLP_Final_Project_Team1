@@ -1,7 +1,7 @@
 # AI Book Recs App (NLP_Project_Team1)
 This project showcases work from DATS 6312: Natural Language Processing. Our interactie app showcases three different NLP models for book recommendation using data from the Amazon Books Reviews dataset. 
 
-![Screenshot](images/SVD.png)
+![Screenshot](images/Screenshot.png)
 
 Here is a brief description of each model:
 
