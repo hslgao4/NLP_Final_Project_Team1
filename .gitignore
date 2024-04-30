@@ -14,3 +14,5 @@ data/*.parquet
 # Ignore Streamlit environment files in the data directory
 .streamlit/credentials.toml
 .streamlit/requirements.txt
+
+.DS_Store
