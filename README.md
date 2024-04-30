@@ -11,7 +11,9 @@ Here is a brief description of each model:
   - ADD INFO HERE
 
 - **KNN**: 
-  - ADD INFO HERE
+  - Input a 3-5 sentence book review
+  - Pre-trained BertForSequenceClassification model predicts book category for user based on input review
+  - KNN finds nearest books in the predicted category using the input review 
 
 - **SVD**: 
   - Input a 3-5 sentence book review
