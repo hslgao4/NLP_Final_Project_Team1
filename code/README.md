@@ -12,10 +12,3 @@
   - For model metrics, run SVD_model_metrics.py
 
 
-## Contributors
-
-- Caitlin Bailey
-- Nina Ebensperger
-- Liang Gao
-
-
