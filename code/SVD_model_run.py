@@ -22,7 +22,7 @@ with open('X_matrix.pkl', 'rb') as f:
 
 
 # Load the dataset
-data = pd.read_parquet('/home/ubuntu/caitlin/1_DATS6312_NLP/Project/data/books_merged_clean.parquet')
+data = pd.read_parquet('data/books_merged_clean.parquet') # add path to parquet file
 
 
 # Function to preprocess the text
