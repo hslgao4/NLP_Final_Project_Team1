@@ -24,6 +24,7 @@ Here is a brief description of each model:
 
 - Clone the repository
 - Install dependencies
+- See README file in code folder for details about each model setup
 - Run `Book_rec_app_final.py` to start the app
 
 ## Built With
