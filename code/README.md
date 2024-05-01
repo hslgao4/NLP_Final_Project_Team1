@@ -1,7 +1,7 @@
 # Model Setup
 
 - **DeepLake**: 
-  - run load_data_copy.py, preprocessing.py, dataset.py, train.py
+  - run load_data_copy.py, preprocessing.py, dataset.py, DeepLake_train.py
 
 - **KNN**: 
   - Run dataloader.py, data_prepare.py, Bert_train.py, KNN_train.py
