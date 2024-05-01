@@ -78,11 +78,8 @@ with tabs[0]:
     * Tokenizatin: Apply the Pretrained BertTokenizer, which is content-based. Replace the classical tokenization methods, and don't need TFIDF which is frequency-based. 
     * LabelEncoder: Encoded the book categories.
     * Dataset: Train 80%, Test 10% and Validation 10%.
-    * Validation results: F1-micro at 0.85, F1-Macro at 0.83, Cohen Kappa score at 0.81.
-    * Test results: F1-micro at 0.84, F1-Macro at 0.83, Cohen Kappa score at 0.80.
+    
     ''')
-
-    st.divider()
 
     st.markdown('**K-Nearst-Neighbors KNN**')
     st.markdown('''
@@ -102,6 +99,15 @@ with tabs[0]:
 
     st.divider()
 
+    st.markdown('**Results**')
+    st.markdown('''
+    * Bert classifier Test results: F1-micro at 0.84, F1-Macro at 0.83, Cohen Kappa score at 0.80.''')
+    st.markdown('''* Manul assessment result: ''')
+    st.image("/home/ubuntu/NLP_Project_Team1/streamlit/liang_result.png", width=400)
+
+
+
+    st.divider()
     st.header("DeepLake Sentence Transformer")
     st.subheader('Model Architecture')
     st.image("/home/ubuntu/NLP_Project_Team1/streamlit/nina_1.png")

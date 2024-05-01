@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 import re
-from train import *
+from Bert_train import *
 
 # Check GPU is available
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
