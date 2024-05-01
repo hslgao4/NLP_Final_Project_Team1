@@ -11,12 +11,12 @@ Here is a brief description of each model:
   - ADD INFO HERE
 
 - **KNN**: 
-  - Input a 3-5 sentence book review
+  - **Input**: 3-5 sentence book review
   - Pre-trained BertForSequenceClassification model predicts book category for user based on input review
   - KNN finds nearest books in the predicted category using the input review 
 
 - **SVD**: 
-  - Input a 3-5 sentence book review
+  - **Input**: 3-5 sentence book review
   - Model uses dimensionality reduction and cosine similary to identify similar book reviews
   - Architecture uses NLTK preprocessing, TF-IDF vectorization, SVD, LSA, and cosine similarity
 
