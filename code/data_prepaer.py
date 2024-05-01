@@ -51,25 +51,4 @@ final_df.to_parquet('../Code/data/final_df.parquet')
 5               Science   5155
 '''
 
-# # Manually set those less than 3000 to others
-# category_less_than_1000 = category[category['count'] < 3000]
-# cat = category_less_than_1000['categories'].to_list()
-#
-# data = df_filtered.copy()
-# data['new_categories'] = data['categories']
-# final_df = data.copy()
-# final_df.loc[final_df['new_categories'].isin(cat), 'new_categories'] = 'others'
-# final_df = final_df.reset_index()
-# final_df = final_df.drop(columns=['level_0', 'index', 'categories'], axis=1)
-# final_df.to_parquet('./Code/data/final_df.parquet')
-
-
-
-
-# train_df.to_csv('data/train_df.csv', index=False)
-# test_df.to_csv('data/test_df.csv', index=False)
-# valid_df.to_csv('data/valid_df.csv', index=False)
-# dataset = load_dataset('csv', data_files={'train': '../Code/data/train_df.csv',
-#                                           'validation': '../Code/data/valid_df.csv',
-#                                           'test': '../Code/data/test_df.csv'})
 

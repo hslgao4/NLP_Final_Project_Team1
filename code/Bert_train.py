@@ -22,18 +22,18 @@ joblib.dump(label_encoder, 'label_encoder.joblib')
 
 
 # Split into train, test, and validation and save files (0.8, 0.1, 0.1)
-# train_df, temp_test_df = train_test_split(df, test_size=0.2, random_state=42)
-# test_df, valid_df = train_test_split(temp_test_df, test_size=0.5, random_state=42)
+train_df, temp_test_df = train_test_split(df, test_size=0.2, random_state=42)
+test_df, valid_df = train_test_split(temp_test_df, test_size=0.5, random_state=42)
 
 #%%
 # Convert dataframes to Hugging Face dataset format
-# train_dataset = Dataset.from_pandas(train_df)
-# val_dataset = Dataset.from_pandas(valid_df)
-# test_dataset = Dataset.from_pandas(test_df)
-#
-# print(f'Train shape {train_df.shape}')
-# print(f'Test shape {test_df.shape}')
-# print(f'Validation shape {valid_df.shape}')
+train_dataset = Dataset.from_pandas(train_df)
+val_dataset = Dataset.from_pandas(valid_df)
+test_dataset = Dataset.from_pandas(test_df)
+
+print(f'Train shape {train_df.shape}')
+print(f'Test shape {test_df.shape}')
+print(f'Validation shape {valid_df.shape}')
 '''
 Train shape (46559, 7)
 Test shape (5820, 7)
@@ -43,22 +43,22 @@ Validation shape (5820, 7)
 #%%
 ''' Tokenize with BERT '''
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-# def tokenize(dataset):
-#    return tokenizer(dataset['review_text'], padding="max_length", truncation=True)
-#
-# train_dataset = train_dataset.map(tokenize, batched=True)
-# val_dataset = val_dataset.map(tokenize, batched=True)
-# test_dataset = test_dataset.map(tokenize, batched=True)
+def tokenize(dataset):
+   return tokenizer(dataset['review_text'], padding="max_length", truncation=True)
+
+train_dataset = train_dataset.map(tokenize, batched=True)
+val_dataset = val_dataset.map(tokenize, batched=True)
+test_dataset = test_dataset.map(tokenize, batched=True)
 
 #%%
 '''Save dataset to disk '''
-# data_path = './Code/train_data'
-# if not os.path.exists(data_path):
-#     os.makedirs(data_path)
-#
-# train_dataset.save_to_disk('./Code/train_data/train_dataset')
-# val_dataset.save_to_disk('./Code/train_data/val_dataset')
-# test_dataset.save_to_disk('./Code/train_data/test_dataset')
+data_path = './Code/train_data'
+if not os.path.exists(data_path):
+    os.makedirs(data_path)
+
+train_dataset.save_to_disk('./Code/train_data/train_dataset')
+val_dataset.save_to_disk('./Code/train_data/val_dataset')
+test_dataset.save_to_disk('./Code/train_data/test_dataset')
 
 #%%
 def compute_metrics(eval_pred):
@@ -113,34 +113,31 @@ accelerator = Accelerator(
 
 '''*************************************Training*************************************'''
 # Train and fine-tuning
-# training_args = TrainingArguments(
-#     output_dir='../Code/result_2',
-#     evaluation_strategy='epoch',
-#     save_strategy='epoch',
-#     learning_rate=2e-4,
-#     per_device_train_batch_size=30,
-#     per_device_eval_batch_size=30,
-#     num_train_epochs=3,
-#     weight_decay=0.01,
-#     load_best_model_at_end=True,
-#     metric_for_best_model='f1_micro'
-# )
-#
-# trainer = Trainer(
-#     model=model,
-#     args=training_args,
-#     train_dataset=train_dataset,
-#     eval_dataset=val_dataset,
-#     data_collator=data_collator,
-#     compute_metrics=compute_metrics,
-#     callbacks=[EarlyStoppingCallback(early_stopping_patience=3), metric_print()]
-# )
+training_args = TrainingArguments(
+    output_dir='../Code/result_2',
+    evaluation_strategy='epoch',
+    save_strategy='epoch',
+    learning_rate=2e-4,
+    per_device_train_batch_size=30,
+    per_device_eval_batch_size=30,
+    num_train_epochs=3,
+    weight_decay=0.01,
+    load_best_model_at_end=True,
+    metric_for_best_model='f1_micro'
+)
+
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=train_dataset,
+    eval_dataset=val_dataset,
+    data_collator=data_collator,
+    compute_metrics=compute_metrics,
+    callbacks=[EarlyStoppingCallback(early_stopping_patience=3), metric_print()]
+)
 
 
-# trainer.train()
-
-
-
+trainer.train()
 
 
 
