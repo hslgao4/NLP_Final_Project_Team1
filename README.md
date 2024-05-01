@@ -24,9 +24,7 @@ Here is a brief description of each model:
 
 - Clone the repository
 - Install dependencies
-- DeepLake Model setup: ADD INFO HERE
-- KNN model setup: under code folder > run dataloader.py, data_prepare.py, Bert_train.py, KNN_train.py
-- SVD model setup: under code folder > run preprocessing.py, SVD_model_train.py, SVD_model_run.py, SVD_model_metrics.py
+- See README file under 'code' folder for instructions about individual model setup
 - Run `Book_rec_app_final.py` to start the app
 
 ## Built With
