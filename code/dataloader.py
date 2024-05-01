@@ -69,7 +69,7 @@ def basic_eda(df):
 print("\nBooks Data EDA")
 basic_eda(books_data)
 print("\nBooks Ratings EDA")
-<<<<<<< HEAD
+
 basic_eda(books_ratings)
 
 print("\nBooks Ratings EDA")
