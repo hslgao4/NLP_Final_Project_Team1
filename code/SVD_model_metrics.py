@@ -146,7 +146,7 @@ def main():
     #with open('X_matrix_17.pkl', 'rb') as f:
     #    X = pickle.load(f)
     # Load data
-    file_path = "/home/ubuntu/caitlin/NLP_Project_Team1/data/books_merged_clean.parquet"
+    file_path = "data/books_merged_clean.parquet" # add path to parquet file
     data = load_and_clean_dataset(file_path)
     # call model
     X, lsa_model = train_lsa_model(data, combined_column='review_combined')
