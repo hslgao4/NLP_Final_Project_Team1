@@ -25,7 +25,7 @@ Here is a brief description of each model:
 - Clone the repository
 - Install dependencies
 - See README file under 'code' folder for instructions about individual model setup
-- Run `Book_rec_app_final.py` to start the app
+- Run `Streamlit_Team1.py` to view our presentation and the app demo
 
 ## Built With
 
