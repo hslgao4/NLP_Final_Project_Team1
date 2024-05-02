@@ -64,7 +64,7 @@ with tabs[0]:
         ''')
     st.divider()
 
-    st.markdown('**Dataset precessing**')
+    st.markdown('**Dataset preprocessing**')
     st.markdown('''
     * The observations of raw data is 3 million, about **3GB**. **Lack of GPU capacity**.
     * Dropped rows with **null value**.
@@ -75,7 +75,7 @@ with tabs[0]:
 
     st.markdown('**BertForSequenceClassification**')
     st.markdown('''
-    * Tokenizatin: Apply the Pretrained BertTokenizer, which is content-based. Replace the classical tokenization methods, and don't need TFIDF which is frequency-based. 
+    * Tokenizatin: Apply the Pretrained BertTokenizer. 
     * LabelEncoder: Encoded the book categories.
     * Dataset: Train 80%, Test 10% and Validation 10%.
     
